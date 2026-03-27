@@ -1,8 +1,8 @@
-# 🚀 Sistema de Verificação de Decolagem para Missão a Marte
+# 🚀 Sistema de Verificação de Decolagem 
 
 ## 📌 Descrição do Projeto
 
-Este projeto simula um sistema básico de análise de telemetria para uma possível decolagem de uma nave com destino a Marte. O objetivo é verificar, com base em dados técnicos, se a nave está **"PRONTO PARA DECOLAR"** ou se a missão deve ser **"DECOLAGEM ABORTADA"**.
+Este projeto simula um sistema básico de análise de telemetria para uma possível decolagem de uma nave. O objetivo é verificar, com base em dados técnicos, se a nave está **"PRONTO PARA DECOLAR"** ou se a missão deve ser **"DECOLAGEM ABORTADA"**.
 
 O sistema utiliza dados como temperatura, energia, pressão e integridade estrutural para tomar decisões simples através de lógica condicional em Python.
 
