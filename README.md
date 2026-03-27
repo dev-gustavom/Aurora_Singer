@@ -1,116 +1,207 @@
-# Aurora_Singer
-
-# 🚀 Sistema de Verificação de Decolagem
+# 🚀 Sistema de Verificação de Decolagem para Missão a Marte
 
 ## 📌 Descrição do Projeto
 
-Este projeto consiste no desenvolvimento de um sistema de verificação de condições para decolagem de um veículo (ex: foguete), com base em dados de telemetria.
+Este projeto simula um sistema básico de análise de telemetria para uma possível decolagem de uma nave com destino a Marte. O objetivo é verificar, com base em dados técnicos, se a nave está **"PRONTO PARA DECOLAR"** ou se a missão deve ser **"DECOLAGEM ABORTADA"**.
 
-O sistema analisa parâmetros críticos em tempo real e decide automaticamente se o veículo está:
-
-* ✅ **PRONTO PARA DECOLAR**
-* ❌ **DECOLAGEM ABORTADA**
-
-Além disso, o sistema inclui uma **análise energética**, que calcula a autonomia com base na energia disponível, perdas e consumo na decolagem.
+O sistema utiliza dados como temperatura, energia, pressão e integridade estrutural para tomar decisões simples através de lógica condicional em Python.
 
 ---
 
-## 📊 Parâmetros analisados
+## 📊 Estrutura dos Dados (CSV)
 
-O sistema verifica os seguintes dados:
+O arquivo `telemetria.csv` contém dados simulados com os seguintes campos:
 
-* 🌡️ **Temperatura interna** (18ºC a 27ºC)
-* 🌍 **Temperatura externa** (40ºC a 50ºC)
-* 🏗️ **Integridade estrutural** (1 = OK, 0 = Falha)
-* 🔋 **Nível de energia** (mínimo 85%)
-* ⛽ **Pressão dos tanques** (90% a 110%)
-* 🧠 **Status dos módulos críticos** (1 = OK, 0 = Falha)
-
----
-
-## ⚙️ Funcionamento
-
-O programa:
-
-1. Solicita os dados ao utilizador
-2. Verifica cada condição
-3. Retorna o estado da decolagem
-4. Calcula a autonomia energética
+* `tempo_s` → tempo em segundos
+* `temperatura_interna_c` → temperatura interna da nave
+* `temperatura_externa_c` → temperatura externa
+* `integridade_estrutural` → 1 (OK) ou 0 (falha)
+* `nivel_energia_pct` → nível de energia (%)
+* `pressao_tanque_bar` → pressão do combustível
+* `status_modulos` → estado dos sistemas (OK/FALHA)
 
 ---
 
-## 🖥️ Prints da Execução
+## ⚙️ Funcionalidades
 
-### ✔ Exemplo de execução com sucesso
+✔ Leitura de dados CSV
+✔ Verificação de condições de segurança
+✔ Decisão automática de decolagem
+✔ Simulação de análise energética
+✔ Identificação de anomalias e riscos
+
+---
+
+## 🧠 Lógica do Sistema
+
+O sistema avalia:
+
+* Temperatura interna segura (18°C a 30°C)
+* Integridade estrutural
+* Nível mínimo de energia (≥ 80%)
+* Pressão do tanque (230 a 260 bar)
+* Status dos módulos
+
+Caso alguma condição não seja atendida:
 
 ```
-Temperatura interna: 20
-Temperatura externa: 42
-Integridade estrutural (1=OK,0=Falha): 1
-Nível de energia (%): 90
-Pressão dos tanques (%): 105
-Status módulos críticos (1=OK,0=Falha): 1
+DECOLAGEM ABORTADA
+```
 
+Caso contrário:
+
+```
 PRONTO PARA DECOLAR
-
-Capacidade total (kWh): 1000
-Consumo na decolagem (kWh): 250
-Taxa de perdas (ex: 0.1 para 10%): 0.1
-
---- ANÁLISE ENERGÉTICA ---
-Energia disponível: 900.00 kWh
-Perdas: 90.00 kWh
-Energia útil: 810.00 kWh
-Autonomia: 3.24 ciclos de decolagem
-✔ Energia suficiente para a missão inicial
 ```
 
 ---
 
-### ❌ Exemplo de falha
+## 🐍 Exemplo de Execução em Python
 
-```
-Temperatura interna: 30
+```python
+import pandas as pd
 
-DECOLAGEM ABORTADA - Temperatura interna fora do limite
+# Ler dados
+df = pd.read_csv("telemetria.csv")
+
+# Pegar última leitura
+dados = df.iloc[-1]
+
+# Verificações
+if dados["temperatura_interna_c"] < 18 or dados["temperatura_interna_c"] > 30:
+    print("DECOLAGEM ABORTADA")
+elif dados["integridade_estrutural"] == 0:
+    print("DECOLAGEM ABORTADA")
+elif dados["nivel_energia_pct"] < 80:
+    print("DECOLAGEM ABORTADA")
+elif dados["pressao_tanque_bar"] < 230 or dados["pressao_tanque_bar"] > 260:
+    print("DECOLAGEM ABORTADA")
+elif dados["status_modulos"] != "OK":
+    print("DECOLAGEM ABORTADA")
+else:
+    print("PRONTO PARA DECOLAR")
 ```
 
 ---
 
-## ▶️ Instruções de Execução
+## 🔋 Análise Energética
 
-### 📌 Requisitos
+O sistema também calcula a autonomia inicial da nave com base em:
 
-* Python 3 instalado
+* Capacidade total da bateria (kWh)
+* Percentual de carga atual
+* Consumo na decolagem
+* Perdas energéticas
 
-### 📌 Como executar
+### Exemplo:
 
-1. Guardar o código em um ficheiro:
+* Capacidade: 1000 kWh
+* Carga atual: 80%
+* Consumo: 300 kWh
+* Perdas: 10%
 
-```
-decolagem.py
-```
+Resultado:
 
-2. Abrir o terminal ou prompt de comando
-
-3. Executar o programa:
-
-```
-python decolagem.py
-```
-
-4. Inserir os valores solicitados
+* Energia útil: 720 kWh
+* Energia restante após decolagem: 420 kWh
 
 ---
 
-## 🧠 Observações
+## 🤖 Análise Assistida
 
-* O sistema segue limites de segurança predefinidos
-* Caso qualquer parâmetro esteja fora do intervalo, a decolagem é automaticamente abortada
-* A análise energética ajuda a prever a viabilidade da missão
+O sistema permite identificar:
+
+### Classificação:
+
+* Dados normais
+* Estados de atenção
+* Condições críticas
+
+### Anomalias:
+
+* Queda de energia
+* Redução de pressão
+* Condições externas severas
+
+### Riscos:
+
+* Falha energética
+* Problemas no tanque
+* Impacto térmico nos sistemas
 
 ---
 
-## 👨‍💻 Autor
+## 🛠️ Tecnologias Utilizadas
 
-Trabalho académico desenvolvido para a disciplina de programação.
+* Python
+* Pandas
+* Google Colab / VS Code
+
+---
+
+## ▶️ Como Executar
+
+### No Google Colab:
+
+1. Fazer upload do arquivo CSV
+2. Executar o script Python
+
+```python
+from google.colab import files
+files.upload()
+```
+
+---
+
+### Localmente (VS Code):
+
+1. Instalar dependências:
+
+```
+pip install pandas
+```
+
+2. Executar:
+
+```
+python script.py
+```
+
+---
+
+## 📁 Estrutura do Projeto
+
+```
+📦 Aurora Siger
+ ┣ 📄 Aurora_Singer.ipynb
+ ┗ 📄 README.md
+```
+
+---
+
+## 🎯 Objetivo Acadêmico
+
+Este projeto foi desenvolvido como atividade introdutória para aplicar conceitos de:
+
+* Lógica de programação
+* Estruturas condicionais
+* Manipulação de dados
+* Simulação de sistemas reais
+
+---
+
+## 📌 Possíveis Melhorias Futuras
+
+* Integração com inteligência artificial
+* Visualização gráfica dos dados
+* Monitoramento em tempo real
+* Interface gráfica (dashboard)
+
+---
+
+## 📄 Licença
+
+Este projeto é de uso acadêmico e livre para estudo.
+
+---
+ina de programação.
